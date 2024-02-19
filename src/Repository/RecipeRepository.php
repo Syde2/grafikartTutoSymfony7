@@ -4,7 +4,10 @@ namespace App\Repository;
 
 use App\Entity\Recipe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\Parameter;
+
 
 /**
  * @extends ServiceEntityRepository<Recipe>
@@ -21,6 +24,30 @@ class RecipeRepository extends ServiceEntityRepository
         parent::__construct($registry, Recipe::class);
     }
 
+    public function getWithDurationLowerThan(int $duration, int $id) : array
+    {
+        $parameters = new ArrayCollection([
+            new Parameter('duration', $duration),
+            new Parameter('id', $id),
+        ]);
+    
+        return $this->createQueryBuilder('r')
+            ->where('r.duration < :duration')
+            ->andWhere('r.id = :id')
+            ->orderBy('r.duration', 'ASC')
+            ->setMaxResults(3)
+            ->setParameters($parameters)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getTotalTime() :int
+    {
+        return $this->createQueryBuilder('e')
+        ->select('sum(e.duration ) AS TOTAL')
+        ->getQuery()
+        ->getSingleScalarResult();
+    }
 //    /**
 //     * @return Recipe[] Returns an array of Recipe objects
 //     */
