@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello RecipeController!{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+<table class="striped" >
+  <thead>
+    <tr>
+      <th scope="col">Nom </th>
+      <th scope="col"> Duree</th>
+      <th scope="col">Description</th>
+      <th scope="col">Actions</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for recipe in recipes %}
+    <tr>
+        <td>
+            <p>{{ recipe.title }}</p>
+        </td>
+        <td>
+            <p>{{ recipe.duration }}</p>
+        </td>
+        <td>
+            <p>{{ recipe.content }}</p>
+        </td>
+        <td>
+        <div  role="group" >
+           <a role="button" href="{{ url('recette.edit', {id: recipe.id} )}}"> Editer </a> 
+           <a role="button" class="secondary" href="{{ path('recette.delete' )}}"> Supprimer </a> 
+        </div> 
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+
+</table>
+</div>
+{% endblock %}

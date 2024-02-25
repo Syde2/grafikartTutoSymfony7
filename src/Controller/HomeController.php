@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class HomeController extends AbstractController
 {
-    #[Route('/', name: 'recipe.show' )]
+    #[Route('/', name: 'index' )]
     public function index( RecipeRepository $repository, EntityManagerInterface $em )
     {
         return $this->render('home/index.html.twig', [
