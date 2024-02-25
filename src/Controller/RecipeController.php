@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Recipe;
 use App\Form\RecetteType;
 use App\Repository\RecipeRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -21,19 +24,27 @@ class RecipeController extends AbstractController
     }
 
     #[Route('/recette/{id}/edit', name:'recette.edit' ) ]
-    public function edit( $id, RecipeRepository $recipeRepository  )
+    public function edit( Recipe $recette, Request $request, EntityManagerInterface $em )
     {
-        $recette = $recipeRepository->find($id);
         $form = $this->createForm(RecetteType::class, $recette );
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid() )
+        {
+            $em->flush();
+            return $this->redirectToRoute('recette');
+
+        }
         return $this->render('recipe/edit.html.twig', [
             'form' => $form
         ]);
 
     }
-    #[Route('/recette/delete', name:'recette.delete' ) ]
-    public function delete()
-    {
-        return $this->json(['recette'=>'recette' ] );
 
+    #[Route('/recette/{id}/delete', name:'recette.delete' ) ]
+    public function delete(Recipe $recette, EntityManagerInterface $em  )
+    {
+        $em->remove($recette);
+        $em->flush();
+        return $this->redirectToRoute('recette');
     }
 }

@@ -29,7 +29,7 @@
         <td>
         <div  role="group" >
            <a role="button" href="{{ url('recette.edit', {id: recipe.id} )}}"> Editer </a> 
-           <a role="button" class="secondary" href="{{ path('recette.delete' )}}"> Supprimer </a> 
+           <a role="button" class="secondary" href="{{ url('recette.delete', {id:recipe.id}) }}"> Supprimer </a> 
         </div> 
         </td>
     </tr>
